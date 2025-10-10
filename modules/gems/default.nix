@@ -25,10 +25,22 @@ rec {
   # `propagatedUserEnvPkgs` of the gem derivation
   applyDependencies = spec: spec // { gemPath = concatMap (d: gems.${d}) spec.dependencies; };
 
+  declareGitSrc =
+    spec:
+    let
+      type = spec.source.type or "gem";
+      src = builtins.fetchGit {
+        inherit (spec.source) url rev;
+        submodules = spec.source.fetchSubmodules;
+      };
+    in
+    spec // (lib.optionalAttrs (type == "git") { inherit src; });
+
   gems = flip mapAttrs gemsetVersions (
     _: versions:
     pipe versions [
       (map applyDependencies)
+      (map declareGitSrc)
       (map (spec: buildRubyGem (spec // { inherit ruby; })))
     ]
   );
