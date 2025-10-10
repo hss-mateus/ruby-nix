@@ -1,10 +1,11 @@
-pkgs:
+bundix: pkgs:
 let
-  rubyNix = import ./default.nix pkgs;
+  rubyNix = import ./default.nix bundix pkgs;
   inherit
     (rubyNix {
       name = "rubynix-test";
-      gemset = ./tests/tiny_app/gemset.nix;
+      gemLock = ./tests/tiny_app/Gemfile.lock;
+      ruby = pkgs.ruby_3_4;
     })
     env
     ruby

@@ -3,17 +3,17 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
+
+    bundix = {
+      url = "github:hss-mateus/bundix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
+    { self, nixpkgs, bundix }:
     {
-      lib = import ./.;
-
-      # preset gemsets
-      presets = {
-        devmode = import ./presets/devmode/gemset.nix;
-      };
+      lib = import ./. bundix;
 
       overlays.ruby = import ./modules/overlays/ruby-overlay.nix;
 
@@ -32,6 +32,6 @@
             overlays = [ (import ./modules/overlays/ruby-overlay.nix) ];
           };
         in
-        import ./shell.nix pkgs;
+        import ./shell.nix bundix pkgs;
     };
 }

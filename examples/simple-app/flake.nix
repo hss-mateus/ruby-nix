@@ -10,10 +10,6 @@
     nixpkgs.url = "nixpkgs";
     ruby-nix.url = "github:inscapist/ruby-nix";
     # a fork that supports platform dependant gem
-    bundix = {
-      url = "github:inscapist/bundix/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     fu.url = "github:numtide/flake-utils";
     bob-ruby.url = "github:bobvanderlinden/nixpkgs-ruby";
     bob-ruby.inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +21,6 @@
       nixpkgs,
       fu,
       ruby-nix,
-      bundix,
       bob-ruby,
     }:
     with fu.lib;
@@ -38,8 +33,7 @@
         };
         rubyNix = ruby-nix.lib pkgs;
 
-        # TODO generate gemset.nix with bundix
-        gemset = if builtins.pathExists ./gemset.nix then import ./gemset.nix else { };
+        gemLock = ./Gemfile.lock;
 
         # If you want to override gem build config, see
         #   https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/ruby-modules/gem-config/default.nix
@@ -47,9 +41,6 @@
 
         # See available versions here: https://github.com/bobvanderlinden/nixpkgs-ruby/blob/master/ruby/versions.json
         ruby = pkgs."ruby-3.3.1";
-
-        # Running bundix would regenerate `gemset.nix`
-        bundixcli = bundix.packages.${system}.default;
 
         # Use these instead of the original `bundle <mutate>` commands
         bundleLock = pkgs.writeShellScriptBin "bundle-lock" ''
@@ -64,7 +55,7 @@
       rec {
         inherit
           (rubyNix {
-            inherit gemset ruby;
+            inherit gemLock ruby;
             name = "my-rails-app";
             gemConfig = pkgs.defaultGemConfig // gemConfig;
           })
@@ -77,7 +68,6 @@
             buildInputs =
               [
                 env
-                bundixcli
                 bundleLock
                 bundleUpdate
               ]

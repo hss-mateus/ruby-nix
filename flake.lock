@@ -1,12 +1,32 @@
 {
   "nodes": {
+    "bundix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1760110392,
+        "narHash": "sha256-R4ybFyF2R4faOmLbIi2urTfnjVzP3BMCdj3W7G3FzJ4=",
+        "owner": "hss-mateus",
+        "repo": "bundix",
+        "rev": "ccb39cde914f7f649983be9f1f2acfd6322595a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hss-mateus",
+        "repo": "bundix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1678875422,
-        "narHash": "sha256-T3o6NcQPwXjxJMn2shz86Chch4ljXgZn746c2caGxd8=",
+        "lastModified": 1759977445,
+        "narHash": "sha256-LYr4IDfuihCkFAkSYz5//gT2r1ewcWBYgd5AxPzPLIo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "126f49a01de5b7e35a43fd43f891ecf6d3a51459",
+        "rev": "2dad7af78a183b6c486702c18af8a9544f298377",
         "type": "github"
       },
       "original": {
@@ -16,6 +36,7 @@
     },
     "root": {
       "inputs": {
+        "bundix": "bundix",
         "nixpkgs": "nixpkgs"
       }
     }

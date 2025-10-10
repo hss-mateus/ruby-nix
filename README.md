@@ -24,9 +24,9 @@ reproducible ruby environment
 
 ## How is it different from bundlerEnv?
 
-1. it does not track the entire directory as `inputSrc` when `gemDir` is specified, requiring only `gemset.nix`.
+1. it does not track the entire directory as `inputSrc` when `gemDir` is specified, requiring only `Gemfile.lock`.
 2. it does not use `BUNDLE_GEMFILE` variable.
-3. it works without `Gemfile` and `Gemfile.lock`.
+3. it works without `Gemfile` and `gemset.nix`.
 
 ## The gist
 
@@ -40,7 +40,7 @@ reproducible ruby environment
 
         inherit (rubyNix {
           name = "simple-ruby-app";
-          gemset = ./gemset.nix;
+          gemLock = ./Gemfile.lock;
         })
           env ruby;
       in {
@@ -49,19 +49,6 @@ reproducible ruby environment
           dev = pkgs.mkShell { buildInputs = [ env ruby ]; };
         };
       });
-```
-
-## Global Bundix Installation (optional)
-
-My bundix [fork](https://github.com/inscapist/bundix) is needed to generate the correct `gemset.nix`. It is available in nix shell out of the box. 
-
-
-``` sh
-# installation
-nix profile install github:inscapist/bundix/main
-
-# upgrade
-nix profile upgrade '.*'
 ```
 
 ## Usage
@@ -84,27 +71,27 @@ if ! has nix_direnv_version || ! nix_direnv_version 3.0.4; then
     source_url "https://raw.githubusercontent.com/nix-community/nix-direnv/3.0.4/direnvrc" "sha256-DzlYZ33mWF/Gs8DDeyjr8mnVmQGx7ASYqA5WlxwvBG4="
 fi
 
-watch_file gemset.nix
+watch_file Gemfile.lock
 use flake
 ```
 
-Or use the latest version [here](https://github.com/nix-community/nix-direnv/blob/master/templates/flake/.envrc). Don't forget to add `watch_file /path_to/gemset.nix` to ensure direnv picks up gem changes.
+Or use the latest version [here](https://github.com/nix-community/nix-direnv/blob/master/templates/flake/.envrc). Don't forget to add `watch_file /path_to/Gemfile.lock` to ensure direnv picks up gem changes.
 
 #### 3. In nix shell
 
-In a nix shell, you have `ruby`, `irb`, `bundle` at your disposal. Additional gems will only be available if they are specified in `gemset.nix`. To generate that, ensure `Gemfile` and `Gemfile.lock` are present, then run `bundix`. 
+In a nix shell, you have `ruby`, `irb`, `bundle` at your disposal. Additional gems will only be available if they are specified in `Gemfile.lock`. To generate that, ensure `Gemfile` is present, then run `bundle lock`. 
 
 ## FAQs
 
 ### 1. When does my environment gets build?
-If you use direnv, running `git add gemset.nix` would trigger a rebuild automatically.
+If you use direnv, running `git add Gemfile.lock` would trigger a rebuild automatically.
 
 Otherwise, Ctrl-D to exit the current nix shell, and enter again.
 
 
 ### 2. How to `bundle`?
 
-With ruby-nix, you shouldn't install gems using bundle. Nix will build the gems for you. **Always run `bundix` to update your gemset after making changes to Gemfile.lock.**. If you faced error with `git fetch`, set `BUNDLE_PATH=vendor/bundle` in your environment.
+With ruby-nix, you shouldn't install gems using bundle. Nix will build the gems for you. **Always run `bundle lock` to update your lockfile after making changes to Gemfile.**. If you faced error with `git fetch`, set `BUNDLE_PATH=vendor/bundle` in your environment.
 
 #### bundle add
 run `bundle add GEM --skip-install` instead
@@ -156,7 +143,7 @@ also remove or rename `.bundle` if it continues to fail.
 ### 4. How to use a different ruby version?
 
 Code comment of [simple-app](examples/simple-app/flake.nix) shows how to use ruby_3_1 instead of the
-_current_ default version (2.7.6). You can also write your own overlay that overrides globally with your own ruby derivation.
+_current_ default version (3.4.7). You can also write your own overlay that overrides globally with your own ruby derivation.
 
 ## Common issues
 

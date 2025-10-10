@@ -1,9 +1,0 @@
-# frozen_string_literal: true
-
-source "https://rubygems.org"
-
-# SEND PRS!!!
-
-# https://github.com/ruby/debug
-gem "debug"
-gem "rubocop"
