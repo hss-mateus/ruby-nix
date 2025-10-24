@@ -43,7 +43,7 @@ rec {
         ;
       inherit (source) type compile;
 
-      buildInputs = if source.compile || !stdenv.isLinux then [ ] else [ autoPatchelfHook ];
+      nativeBuildInputs = lib.optionals (!source.compile && stdenv.isLinux) [ autoPatchelfHook ];
 
       dependencies = attrs.dependencies or [ ];
 
