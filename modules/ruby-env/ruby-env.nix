@@ -9,6 +9,7 @@
   groups,
   extraRubySetup,
   ignoreCollisions,
+  gemset-derivation,
   ...
 }:
 
@@ -29,6 +30,7 @@ let
     pathsToLink = [ "/lib" ];
     postBuild = mkBinStubs + lib.optionalString (extraRubySetup != null) extraRubySetup;
     passthru = {
+      gemset = gemset-derivation;
       ruby = stdenv.mkDerivation {
         name = "${name}-ruby";
         nativeBuildInputs = [ makeBinaryWrapper ];

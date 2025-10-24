@@ -20,6 +20,7 @@ let
     pathsToLink = [ "/" ];
     passthru = {
       ruby = rubyEnv.ruby;
+      gemset = rubyEnv.gemset;
     };
     meta = {
       platforms = rubyEnv.meta.platforms;

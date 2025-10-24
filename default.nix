@@ -54,6 +54,7 @@ let
         ignoreCollisions
         ;
 
+      gemset-derivation = resolved-gemset;
       gemset = import resolved-gemset;
     }
   );
